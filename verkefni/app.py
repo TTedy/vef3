@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, url_for 
 
 app = Flask(__name__)
 
@@ -6,14 +6,13 @@ app = Flask(__name__)
 def index():
     return render_template("index.html")
 
-@app.route("/prufa")
-def prufa():
-    return "prufa"
+@app.route("/sita2")
+def sita2():
+        return render_template("sita2.html")
 
-@app.route("/ummig")
-def ummog():
-    return "þoavldur Breki"
-
+@app.errorhandler(404)
+def error(error):
+    return render_template("error.html")
 
 
 app.run(debug=True)
