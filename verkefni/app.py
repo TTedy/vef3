@@ -13,7 +13,7 @@ def index():
 
 @app.route("/sita2")
 def sita2():
-        return render_template("sita2.html",listi=listi,titill=titill)
+        return render_template("sita2.html",listi=listi,titill=titill, lið=lið)
 
 @app.errorhandler(404)
 def error(error):

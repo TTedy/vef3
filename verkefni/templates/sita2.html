@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css" integrity="sha384-X38yfunGUhNzHpBaEBsWLO+A0HDYOQi8ufWDkZ0k9e0eXz/tH3II7uKZ9msv++Ls" crossorigin="anonymous">
     <title>{{ titill }}</title>
 </head>
-<body>
+<body class="bg-gradient">
     <br>
     <div class="pure-menu pure-menu-horizontal">
         <a href="/" class="pure-menu-heading pure-menu-link">HOME</a>
@@ -21,12 +21,17 @@
     <br>
     
 
-    <h1>pogger gaming 2</h1>
+    <h1>pogger þetta er siða tvö</h1>
     
-
+    <div class="kassar">
     {% for i in listi: %}
         {{ i }} <br>
     {% endfor %}
-    
+    <br>
+    <br>
+    {% for i in lið: %}
+        {{ lið[i] }} <br>
+    {% endfor %}
+    </div>
 </body>
 </html>

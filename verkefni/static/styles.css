@@ -1,3 +1,32 @@
-body{
-    background-color: rgb(64, 224, 163);
+body {
+    background: linear-gradient(90deg, red, orange, yellow, lime, cyan, blue, indigo, violet);
+    background-size: 10000% 10000%;
+    
+    animation: bg-gradient 45s infinite;
+
+    color: rgb(212, 212, 212);
+    }
+    
+    @keyframes bg-gradient { 
+        0%{background-position:0% 50%}
+        50%{background-position:100% 50%}
+        100%{background-position:0% 50%}
+    }
+
+.kassar{
+    max-width:fit-content;
+    max-height:fit-content;
+    background-color: rgba(rgb(163, 34, 125), rgb(176, 184, 99), rgb(17, 17, 204), 20%);
+    position: relative;
+    animation: example 2s infinite;
 }
+@keyframes example {
+    0%,
+    100% {
+      left: 0;
+    }
+  
+    50% {
+      left: 200px;
+    }
+  }
