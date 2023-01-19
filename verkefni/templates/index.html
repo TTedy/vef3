@@ -6,26 +6,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static',filename='styles.css')}}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css" integrity="sha384-X38yfunGUhNzHpBaEBsWLO+A0HDYOQi8ufWDkZ0k9e0eXz/tH3II7uKZ9msv++Ls" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/grids-responsive-min.css" />
     <title>Document</title>
 </head>
 <body>
     <br>
     
-    <div class="pure-menu pure-menu-horizontal">
-        <a href="/" class="pure-menu-heading pure-menu-link">HOME</a>
-        <ul class="pure-menu-list">
-            <li class="pure-menu-item">
-                <a href="/sita2" class="pure-menu-link">Siða 2</a>
-            </li>
-        </ul>
+    {% include "valmynd.html" %}
+    
+    <br>
+
+    <div class="pure-g">
+        {% for i in v %}
+            <div class="pure-u-1 pure-u-md-1-2">
+                <a href="/vara/{{ i['id']}}">{{ i['nafn'] }}</a>
+                {{ i['verd'] }} <br>
+                <img src="{{ url_for('static', filename=i['mynd']) }} " alt="">
+
+            </div>
+        {% endfor %}
+
     </div>
 
 
 
 
     <br>
-    <h1>Hello frá index.html</h1>   
-    <img src="{{ url_for('static',filename='flower.jpg')}}" alt="">
-    <a href="/sita2">prufa </a>
 </body>
 </html>

@@ -1,0 +1,13 @@
+<div class="pure-menu pure-menu-horizontal">
+    <ul class="pure-menu-list">
+
+        {% for i in valmynd %}
+
+            <li class="pure-menu-item">
+                <a href="{{ i['url'] }}" class="pure-menu-link">{{ i['hlekkur']}}</a>
+            </li>
+
+        {% endfor %}
+
+    </ul>
+</div>

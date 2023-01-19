@@ -6,19 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static',filename='styles.css')}}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css" integrity="sha384-X38yfunGUhNzHpBaEBsWLO+A0HDYOQi8ufWDkZ0k9e0eXz/tH3II7uKZ9msv++Ls" crossorigin="anonymous">
-    <title>{{ titill }}</title>
+    <title>Titil</title>
 </head>
 <body class="bg-gradient">
     <br>
-    <div class="pure-menu pure-menu-horizontal">
-        <a href="/" class="pure-menu-heading pure-menu-link">HOME</a>
-        <ul class="pure-menu-list">
-            <li class="pure-menu-item">
-                <a href="/sita2" class="pure-menu-link">Siða 2</a>
-            </li>
-        </ul>
-    </div>
+    
+    {% include "valmynd.html" %}
+    
     <br>
+
+    <h2>{{ texti }}</h2>
     
 
     <h1>pogger þetta er siða tvö</h1>
