@@ -74,13 +74,17 @@ def index():
 
 @app.route("/flokkur/<nafn>")
 def flokkur(nafn):
-    return render_template("index.html")
-
-
+    return render_template("sita3.html",v=vorulisti,nafn=nafn,valmynd=valmynd) 
 
 @app.route("/vara/<int:id>")
 def vorur(id):
-    return render_template("index.html",id=id)
+    for x in vorulisti:
+        if x["id"] == id:
+            nafn = x["nafn"]
+            lysing = x["lysing"]
+            mynd = x["mynd"]
+            verd = x["verd"]
+    return render_template("sita2.html",nafn=nafn,id=id,lysing=lysing,mynd=mynd,verd=verd,valmynd=valmynd)
 
 
 #Dynamic route

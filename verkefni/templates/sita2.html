@@ -15,20 +15,13 @@
     
     <br>
 
-    <h2>{{ texti }}</h2>
-    
-
-    <h1>pogger þetta er siða tvö</h1>
-    
-    <div class="kassar">
-    {% for i in listi: %}
-        {{ i }} <br>
-    {% endfor %}
-    <br>
-    <br>
-    {% for i in lið: %}
-        {{ lið[i] }} <br>
-    {% endfor %}
+    <div class="product">
+        <h1 class="name">{{nafn}}</h1>
+        <p class="lysing">{{lysing}}</p>
+        <img class="image" src="{{url_for('static',filename=mynd)}}">
+        <p class="verd">{{verd}}Kr</h2>
     </div>
+
+
 </body>
 </html>
