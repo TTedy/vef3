@@ -12,24 +12,11 @@
 <body>
     <br>
     
-    {% include "valmynd.html" %}
-    
-    <br>
-
-    <div class="pure-g">
-        {% for i in v %}
-            <div class="pure-u-1 pure-u-md-1-2">
-                <a href="/vara/{{ i['id']}}">{{ i['nafn'] }}</a>
-                {{ i['verd'] }} <br>
-                <img src="{{ url_for('static', filename=i['mynd']) }} " alt="">
-
-            </div>
-        {% endfor %}
-
-    </div>
-
-
-
+<div>
+    {% for i in myndir['results'] %}
+        {{ i['title'] }}
+    {% endfor %}
+</div>
 
     <br>
 </body>
