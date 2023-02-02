@@ -1,7 +1,12 @@
+body{
+  background-color: rgb(255, 255, 255);
+}
+
 .imger{
     max-width: 500px;
     max-height: 500px;
 }
+
 
 .container {
     position: relative;
@@ -20,3 +25,19 @@
     width: 100%;
     height: 100%;
   }
+.container2{
+  border: 1px ;
+  text-align: center;
+  justify-content: center;
+  padding-top: 15px;
+}
+
+  a { color: inherit; } 
+
+.footer-content{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+}

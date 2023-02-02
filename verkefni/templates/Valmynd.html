@@ -1,13 +1,27 @@
 <div class="pure-menu pure-menu-horizontal">
     <ul class="pure-menu-list">
-
         {% for i in valmynd %}
-
             <li class="pure-menu-item">
                 <a href="{{ i['url'] }}" class="pure-menu-link">{{ i['hlekkur']}}</a>
             </li>
-
         {% endfor %}
-
+            <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
+                <a href="#" id="menuLink1" class="pure-menu-link">Flokkar</a>
+                <ul class="pure-menu-children">
+                    <li class="pure-menu-item">
+                        <a href="/Flokkar/35" class="pure-menu-link">Drama</a>
+                    </li>
+                    <li class="pure-menu-item">
+                        <a href="/Flokkar/28" class="pure-menu-link">Action</a>
+                    </li>
+                    <li class="pure-menu-item">
+                        <a href="/Flokkar/35" class="pure-menu-link">Comedy</a>
+                    </li>
+                    <li class="pure-menu-item">
+                        <a href="/Flokkar/16" class="pure-menu-link">Animation</a>
+                    </li>
+                </ul>
+            </li>
+        
     </ul>
 </div>
