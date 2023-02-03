@@ -65,8 +65,7 @@ def flokkar(id):
 
     with urllib.request.urlopen("https://api.themoviedb.org/3/discover/movie?with_genres={}&api_key=2f4ea61d9bfaa42c92e84e4e34bd154b&language=en-US&page="+str(random_page).format(id)) as api:
         genrasapi = json.loads(api.read().decode())
-
-    print(id)
+        
     return render_template("Flokkar.html",ga=genrasapi,valmynd=valmynd)
 
 @app.errorhandler(404)
