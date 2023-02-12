@@ -6,7 +6,7 @@
 
 {% block content %}
 
-  <h1 class="center">The movie database</h1>
+  <h1 class="container3">The movie database</h1>
     <div class="">
         <div class="pure-g">
             {% for i in myndir['results'] %}
@@ -17,5 +17,7 @@
             {% endfor %}
         </div>
     </div>
+
+{% include "Pagnation.html" %}
 
 {% endblock %}

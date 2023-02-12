@@ -1,16 +1,19 @@
-from flask import Flask, render_template, url_for, json 
+from flask import Flask, render_template, url_for, json, session, request
 import urllib.request
 from random import randint,choice
-from datetime import date
+import datetime
+from datetime import date,timedelta
 import subprocess
 
 
 app = Flask(__name__)
+app.secret_key = "secret key"
+
 
 valmynd = [ {"url":'/',"hlekkur":"Heim"},
-            {"url":'/hlekkur/Enskar',"hlekkur":"Enskar"},
-            {"url":'/hlekkur/Íslenksar',"hlekkur":"Íslenksar"},
-            {"url":'/hlekkur/Top-20',"hlekkur":"Top 20"},
+            {"url":'/hlekkur/Myndir',"hlekkur":"Myndir í syningu"},
+            {"url":'/hlekkur/Meðmelt',"hlekkur":"Best meðmelt"},
+            {"url":'/hlekkur/Dramas',"hlekkur":"Best Dramas"},
           ]
 
 
@@ -18,23 +21,76 @@ valmynd = [ {"url":'/',"hlekkur":"Heim"},
 
 @app.route("/")
 def index():
+    global random_page
     random_page = randint(1, 550)
+
+    session.pop("page", None)  # clear the "page" session variable
+    session["page"] = random_page  # set the "page" session variable
 
     with urllib.request.urlopen("https://api.themoviedb.org/3/discover/movie?api_key=2f4ea61d9bfaa42c92e84e4e34bd154b&page="+ str(random_page)) as api:
         gogn = json.loads(api.read().decode())
     return render_template("index.html", myndir=gogn, valmynd=valmynd)
 
+
+@app.route("/page", methods=["POST"])
+def update_page():
+    global random_page
+    
+    if "page" not in session:
+        session["page"] = random_page
+
+    if request.form["page"] == "previous":
+        session["page"] -= 1
+    elif request.form["page"] == "next":
+        session["page"] += 1
+    
+    page=session["page"]
+
+    print()
+    print()
+    print(page)
+    print()
+    print()
+
+
+    with urllib.request.urlopen("https://api.themoviedb.org/3/discover/movie?api_key=2f4ea61d9bfaa42c92e84e4e34bd154b&page="+ str(page)) as api:
+        gogn = json.loads(api.read().decode())
+    
+    return render_template("index.html", myndir=gogn, valmynd=valmynd)
+
+
+
+
+
+
+
 @app.route("/hlekkur/<nafn>")
 def hlekkur(nafn):
-    if nafn == "Enskar":
-        with urllib.request.urlopen("https://api.themoviedb.org/3/discover/movie?api_key=2f4ea61d9bfaa42c92e84e4e34bd154b&with_original_language={}".format(nafn)) as api:
-            hlekkur = json.loads(api.read().decode())
-    if nafn == "Íslenksar":
-        with urllib.request.urlopen("https://api.themoviedb.org/3/discover/movie?api_key=2f4ea61d9bfaa42c92e84e4e34bd154b&with_original_language={}".format(nafn)) as api:
-            hlekkur = json.loads(api.read().decode())
-    if nafn == "Top-20":
-        pass
+    staðir = {"url_1":"https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=2f4ea61d9bfaa42c92e84e4e34bd154b&page=1","url_2":"https://api.themoviedb.org/3/discover/movie?with_genres=18&sort_by=vote_average.desc&vote_count.gte=10&api_key=2f4ea61d9bfaa42c92e84e4e34bd154b&page=1","url_3":"https://api.themoviedb.org/3/discover/movie?primary_release_date.gte={}&primary_release_date.lte={}&api_key=2f4ea61d9bfaa42c92e84e4e34bd154b&page=1"}
+    x = datetime.date.today()
+    old_x = x - timedelta(weeks=2)
+    staðir["url_3"] = staðir["url_3"].format(old_x,x)
+    mapping = {"Meðmelt":"url_1","Dramas":"url_2","Myndir":"url_3"}
+    if nafn in mapping:
+        key = mapping[nafn]
+        apistað = staðir.get(key)
+
+    with urllib.request.urlopen(apistað) as api:
+        hlekkur = json.loads(api.read().decode())
+
     return render_template("hlekkur.html", h=hlekkur,valmynd=valmynd)
+
+
+
+
+
+
+
+
+
+
+
+
 
 @app.route("/mynd/<id>")
 def mynd(id):
