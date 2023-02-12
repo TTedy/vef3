@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block container %}
+    
+    <h1>Formið</h1>
+    <!-- birtum formið hér fyrir neðan -->
+    <form class="pure-form" action="/nyskra_vinnsla" method="POST">
+        {{ f.csrf_token }}
+
+        {{ f.email.label }}
+        {{ f.email }}
+        <br>
+        {{ f.password.label }}
+        {{ f.password }}
+        <br>
+        {{ f.takki }}
+
+    </form>
+    
+    {% endblock %}

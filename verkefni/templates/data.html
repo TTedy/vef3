@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% include "valmynd.html" %}
+
+{% block container %}
+    
+    <h1>Gögnin</h1>
+    {% for i in d %}
+        <h2>{{ i}}</h2>    
+    {% endfor %}
+    
+{% endblock %}

@@ -1,21 +1,11 @@
 {% extends "base.html" %}
 
-{% block title %}
-    Kvikmyndir
-{% endblock %}
+{% block container %}
+    
+<h1>hi frá index </h1>
 
-{% block content %}
-
-  <h1 class="center">The movie database</h1>
-    <div class="">
-        <div class="pure-g">
-            {% for i in myndir['results'] %}
-                <div class="pure-u-1 pure-u-xl-1-4 container2">
-                    <a href="/mynd/{{ i['id'] }}"> {{ i['title'] }}</a> <br>
-                    <a href="/mynd/{{ i['id'] }}"><img class="imger" src="https://image.tmdb.org/t/p/original{{i['poster_path']}}"></a>  <br>
-                </div>
-            {% endfor %}
-        </div>
-    </div>
-
-{% endblock %}
+{% if x != None %}
+    {{x}}
+{% endif %}
+    
+    {% endblock %}
