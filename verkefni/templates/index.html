@@ -4,8 +4,28 @@
     
 <h1>hi frá index </h1>
 
+<<<<<<< HEAD
 {% if x != None %}
     {{x}}
 {% endif %}
     
     {% endblock %}
+=======
+{% block content %}
+
+  <h1 class="container3">The movie database</h1>
+    <div class="">
+        <div class="pure-g">
+            {% for i in myndir['results'] %}
+                <div class="pure-u-1 pure-u-xl-1-4 container2">
+                    <a href="/mynd/{{ i['id'] }}"> {{ i['title'] }}</a> <br>
+                    <a href="/mynd/{{ i['id'] }}"><img class="imger" src="https://image.tmdb.org/t/p/original{{i['poster_path']}}"></a>  <br>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+{% include "Pagnation.html" %}
+
+{% endblock %}
+>>>>>>> b1c6526615993fb84e068816bec9a3f70e957148
