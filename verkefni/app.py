@@ -1,4 +1,4 @@
-from flask import Flask,render_template,request,session
+from flask import Flask,render_template,request,session,flash
 # mikið import fyrir wtformið
 import pyrebase
 from pyrebase.pyrebase import Auth
@@ -74,6 +74,14 @@ def gogn():
 def innskra():
     # Tilvikið f af Frm klasanum ( sem er form ) sendur yfir í template
     return render_template("innskra.html", f=Frm(), valmynd=valmynd )
+
+
+@app.route('/display')
+def display():
+    # Retrieve the flash message from the user's session
+    message = session.get('_flashes', None)
+    return render_template('display.html', message=message)
+
 
 @app.route('/innskraning_vinnsla', methods=["POST", "GET"])
 def iv():
