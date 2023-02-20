@@ -1,15 +1,41 @@
 {% extends "base.html" %}
 
 {% block container %}
-    
-<h1>hi frá index </h1>
 
-{% if x %}
-    {{x}}
-{% endif %}
-
-{% if message %}
-    <div class="flash">{{ message[0] }}</div>
-{% endif %}
+    <div>
+        
+    </div>
     
-    {% endblock %}
+    <h1>gögn frá firebase ! </h1>
+    {% if sg == False %}
+        {% for i in gd.values() %}
+            {{i['email']}} <br>
+            {{i['nafn']}} <br>
+        {% endfor %}
+    {% endif %}
+
+    {% if sg == True %}
+        <table class="pure-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Email</th>
+                    <th>Nafn</th>
+                    <th>Skopun</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            {% for i in gd %}
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>{{i.values()['email']}}</td>
+                    <td>{{i.values()['nafn']}}</td>
+                    <td>{{i.values()['texti']}}</td>
+                </tr>
+            </tbody>
+            {% endfor %}
+        </table>
+    {% endif %}
+
+{% endblock %}

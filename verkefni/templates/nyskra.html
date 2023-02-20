@@ -4,17 +4,23 @@
     
     <h1>Formið</h1>
     <!-- birtum formið hér fyrir neðan -->
-    <form class="pure-form" action="/nyskra_vinnsla" method="POST">
-        {{ f.csrf_token }}
+    <form class="pure-form" action="/nyskra" method="POST">
+        {{ df.csrf_token }}
 
-        {{ f.email.label }}
-        {{ f.email }}
+        {{ df.email.label }}
+        {{ df.email }}
         <br>
-        {{ f.password.label }}
-        {{ f.password }}
+        {{ df.nafn.label }}
+        {{ df.nafn }}
         <br>
-        {{ f.takki }}
+        {{ df.texti.label}}
+        {{ df.texti }}
+        <br>
+        {{ df.takki }}
 
     </form>
+
+    {{ ckeditor.load(pkg_type="standard") }}  <!--  Hlöðum editornum inn í templateið, pk_type= basic/standard/full -->
+    {{ ckeditor.config(name='texti') }}   <!--  hér veljum við field til að setja editorinn á, í þessu tilviki texti -->
     
     {% endblock %}
