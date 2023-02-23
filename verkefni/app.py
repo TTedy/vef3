@@ -15,8 +15,8 @@ app.config['SECRET_KEY'] = "gaman" # þurfum þetta fyrir csrf, samt hafa random
 ckeditor = CKEditor(app)  # Frumstillum / smíðum ckeditor tilvik
 
 valmynd = [ {"url":'/',"hlekkur":"Heim"},
-            {"url":'/nyskra',"hlekkur":"nykra"},
             {"url":'/innskra',"hlekkur":"innskra"},
+            {"url":'/dataform',"hlekkur":"Dataform"},
             {"url":'/utskra',"hlekkur":"útskra"},
           ]
 
@@ -43,24 +43,24 @@ class Frm(FlaskForm):
     takki = SubmitField("skrá")
 
 class Dataform(FlaskForm):
-    email = EmailField("Netfang:",validators=[InputRequired()])
     nafn = StringField("nafn:",validators=[InputRequired()])
+    flokkur = SelectField(u'Hvaða bolti', choices=[('Fotbolti', 'Fotbolti'), ('Handbolti', 'Handbolti'), ('Korfubolti', 'Korfubolti')])
     texti = TextAreaField("Texti:", validators=[InputRequired(),Length(min=5,max=15)])  # Birtum CKEditorinn í þessum í index.html
+    mynd = StringField("url",validators=[InputRequired()])
     takki = SubmitField("innskra:")
 
 @app.route('/')
 def index():
+    sg = bool()
+    user = db.child("Gogn").get()
+    getdata = dict(user.val())
     if  'notandi' in session and session['notandi']:
         try:
-            
-            user = db.child("Gogn").get()
-            getdata = dict(user.val())
-
             return render_template("index.html",gd = getdata,valmynd=valmynd,sg = True)
         except:
-            return render_template("index.html",gd = False,valmynd=valmynd,sg = True)
+            return render_template("index.html",gd = getdata,valmynd=valmynd,sg = True)
     else:
-        return render_template("index.html",valmynd=valmynd,sg=False)
+        return render_template("index.html",valmynd=valmynd,sg=False, gd = getdata)
 
 @app.route('/dataform')
 def df():
@@ -71,23 +71,25 @@ def df():
 def ns():
     df = Dataform()
     if request.form:
-        email = df.email.data
+        flokkur = df.flokkur.data
         nafn = df.nafn.data
+        mynd = df.mynd.data
         texti = df.texti.data
+
         try:
-            db.child("Gogn").push({"email":email,"nafn":nafn,"texti":texti})
-            return "gögn eru komin!"
+            db.child("Gogn").push({"flokkur":flokkur,"nafn":nafn,"texti":texti,"mynd":mynd})
+            return render_template("index.html",valmynd=valmynd)
         except:
-            return "að seta gögn virkaði ekki :("
+            return render_template("index.html",valmynd=valmynd)
     else:
-        return "það má ekki koma nema úr formi!!"
+        return render_template("index.html",valmynd=valmynd)
     # Tilvikið f af Frm klasanum ( sem er form ) sendur yfir í template
     return render_template("nyskra.html", df=Dataform(), valmynd=valmynd)
 
 @app.route('/innskra')
 def innskra():
     # Tilvikið f af Frm klasanum ( sem er form ) sendur yfir í template
-    return render_template("innskra.html", f=Frm(), valmynd=valmynd )
+    return render_template("innskra.html", f=Frm(), valmynd=valmynd)
 
 @app.route('/innskraning_vinnsla', methods=["POST", "GET"])
 def iv():
@@ -106,21 +108,21 @@ def iv():
             user = db.child("Gogn").get()
             getdata = dict(user.val())
             
-            return render_template("index.html",gd = getdata, x=x)
+            return render_template("index.html",gd = getdata, x=x ,valmynd=valmynd)
         except:
             x = "Innskráning tóks ekki..."
-            return render_template("index.html",x=x)
+            return render_template("index.html",x=x,valmynd=valmynd)
         
     else:
         x = "Má ekki, verðum að koma úr formi"
-        return render_template("index.html",x=x, )
+        return render_template("index.html",x=x,valmynd=valmynd )
 
 
 @app.route('/utskra')
 def utskra():
     if session:
         session.pop("notandi", None)
-    return "Þú ert útskráður"
+    return render_template("index.html",valmynd=valmynd )
 
 if __name__ == "__main__":
     app.run(debug=True)
