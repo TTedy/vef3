@@ -2,44 +2,35 @@
 
 {% block container %}
 
-    <div>
-        
-    </div>
-    
-    <h1>gögn frá firebase ! </h1>
-    {% if sg == False %}
-        {% for i in gd.values() %}
-            {{i['email']}} <br>
-            {{i['nafn']}} <br>
-        {% endfor %}
-    {% endif %}
+<h1>My Blog</h1>
 
-    {% if sg == True %}
-        <table class="pure-table">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Nafn</th>
-                    <th>Flokkur</th>
-                    <th>Skopun</th>
-                    <th>mynd</th>
-                    <th>Delete</th>
-                </tr>
-            </thead>
-            <tbody>
-            {% for i in gd.values() %}
-            
-                <tr>
-                    <td>1</td>
-                    <td>{{i['nafn']}}</td>
-                    <td>{{i['flokkur']}}</td>
-                    <td>{{i['texti'] | safe }}</td>
-                    <td>{{i['mynd']}}</td>
-                </tr>
-            
-            {% endfor %}
-        </tbody>
-        </table>
-    {% endif %}
+<div>
+    
+</div>
+
+<h2>Latest Posts</h2>
+
+
+{% if sg == False %}
+    {% for post in gd.values() %}
+        <div class="pure-u-1-3 containeri">
+            <h3>{{ post['nafn'] }}</h3>
+               {{ post['texti'] | safe }}
+               {{ post['mynd'] }}
+            <p>Published on: {{ post['published_date'] }}</p>
+        </div>
+    {% endfor %}
+{% endif %}
+
+{% if sg == True  %}
+    {% for post in gd.values() %}
+        <div class="pure-u-1-3 containeri">
+            <h3>{{ post['nafn'] }}</h3>
+            <img src="{{post['mynd']}}" alt="">
+            <p> {{post['texti'] | safe }}</p>
+            <p>Published on: {{ post['published_date'] }}</p>
+        </div>
+    {% endfor %}
+{% endif %}
 
 {% endblock %}

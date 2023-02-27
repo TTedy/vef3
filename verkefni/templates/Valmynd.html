@@ -6,4 +6,14 @@
             </li>
         {% endfor %}
     </ul>
+    <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
+        <a href="#" id="menuLink1" class="pure-menu-link">flokkar</a>
+        <ul class="pure-menu-children">
+            {% for i in flokkur %}
+            <li class="pure-menu-item">
+                <a href="{{i['url']}}" class="pure-menu-link">{{i['hlekkur']}}</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </li>
 </div>

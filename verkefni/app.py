@@ -1,10 +1,10 @@
 from flask import Flask,render_template,request,session,flash
 # mikið import fyrir wtformið
-import pyrebase
+import pyrebase,datetime
 from pyrebase.pyrebase import Auth
-
+from datetime import datetime
 from flask_wtf import FlaskForm
-from wtforms import StringField,EmailField,SubmitField,TextAreaField,IntegerField,HiddenField,DateField,PasswordField
+from wtforms import StringField,EmailField,SubmitField,TextAreaField,IntegerField,HiddenField,DateField,PasswordField,SelectField
 from wtforms.validators import DataRequired, InputRequired, Length
 
 from flask_ckeditor import CKEditor # import fyrir CKEditorinn, þurfum að vera búin að pip install flask-ckeditor
@@ -19,6 +19,10 @@ valmynd = [ {"url":'/',"hlekkur":"Heim"},
             {"url":'/dataform',"hlekkur":"Dataform"},
             {"url":'/utskra',"hlekkur":"útskra"},
           ]
+
+flokkar = [ {"url":"/","hlekkur":"Handbolti"},
+            {"url":"/","hlekkur":"Fotbolti"},
+            {"url":"/","hlekkur":"Korfubolti"},]
 
 
 
@@ -44,9 +48,10 @@ class Frm(FlaskForm):
 
 class Dataform(FlaskForm):
     nafn = StringField("nafn:",validators=[InputRequired()])
-    flokkur = SelectField(u'Hvaða bolti', choices=[('Fotbolti', 'Fotbolti'), ('Handbolti', 'Handbolti'), ('Korfubolti', 'Korfubolti')])
+    flokkur = SelectField('Hvaða bolti', choices=[('Fotbolti', 'Fotbolti'), ('Handbolti', 'Handbolti'), ('Korfubolti', 'Korfubolti')])
     texti = TextAreaField("Texti:", validators=[InputRequired(),Length(min=5,max=15)])  # Birtum CKEditorinn í þessum í index.html
     mynd = StringField("url",validators=[InputRequired()])
+    published_date = DateField("dagsetning")
     takki = SubmitField("innskra:")
 
 @app.route('/')
@@ -56,16 +61,16 @@ def index():
     getdata = dict(user.val())
     if  'notandi' in session and session['notandi']:
         try:
-            return render_template("index.html",gd = getdata,valmynd=valmynd,sg = True)
+            return render_template("index.html",gd = getdata,valmynd=valmynd,sg = True,flokkur=flokkar)
         except:
-            return render_template("index.html",gd = getdata,valmynd=valmynd,sg = True)
+            return render_template("index.html",gd = getdata,valmynd=valmynd,sg = True,flokkur=flokkar)
     else:
-        return render_template("index.html",valmynd=valmynd,sg=False, gd = getdata)
+        return render_template("index.html",valmynd=valmynd,sg=False, gd = getdata,flokkur=flokkar)
 
 @app.route('/dataform')
 def df():
     # Tilvikið f af Frm klasanum ( sem er form ) sendur yfir í template
-    return render_template("nyskra.html", df=Dataform(), valmynd=valmynd)
+    return render_template("nyskra.html", df=Dataform(), valmynd=valmynd,flokkur=flokkar)
 
 @app.route('/nyskra', methods=["GET","POST"])
 def ns():
@@ -75,29 +80,22 @@ def ns():
         nafn = df.nafn.data
         mynd = df.mynd.data
         texti = df.texti.data
+        published_date = str(datetime.today())
 
         try:
-            db.child("Gogn").push({"flokkur":flokkur,"nafn":nafn,"texti":texti,"mynd":mynd})
-            return render_template("index.html",valmynd=valmynd)
+            db.child("Gogn").push({"flokkur":flokkur,"nafn":nafn,"texti":texti,"mynd":mynd,"published_date":published_date})
+            return render_template("index.html",valmynd=valmynd,flokkur=flokkar)
         except:
-            return render_template("index.html",valmynd=valmynd)
+            return render_template("index.html",valmynd=valmynd,flokkur=flokkar)
     else:
-        return render_template("index.html",valmynd=valmynd)
+        return render_template("index.html",valmynd=valmynd,flokkur=flokkar)
     # Tilvikið f af Frm klasanum ( sem er form ) sendur yfir í template
-    return render_template("nyskra.html", df=Dataform(), valmynd=valmynd)
+    return render_template("nyskra.html", df=Dataform(), valmynd=valmynd,flokkur=flokkar)
 
 @app.route('/innskra')
 def innskra():
     # Tilvikið f af Frm klasanum ( sem er form ) sendur yfir í template
-    return render_template("innskra.html", f=Frm(), valmynd=valmynd)
-
-
-@app.route('/display')
-def display():
-    # Retrieve the flash message from the user's session
-    message = session.get('_flashes', None)
-    return render_template('display.html', message=message)
-
+    return render_template("innskra.html", f=Frm(), valmynd=valmynd,flokkur=flokkar)
 
 @app.route('/innskraning_vinnsla', methods=["POST", "GET"])
 def iv():
@@ -116,21 +114,21 @@ def iv():
             user = db.child("Gogn").get()
             getdata = dict(user.val())
             
-            return render_template("index.html",gd = getdata, x=x ,valmynd=valmynd)
+            return render_template("index.html",gd = getdata, x=x ,valmynd=valmynd,flokkur=flokkar)
         except:
             x = "Innskráning tóks ekki..."
-            return render_template("index.html",x=x,valmynd=valmynd)
+            return render_template("index.html",x=x,valmynd=valmynd,flokkur=flokkar)
         
     else:
         x = "Má ekki, verðum að koma úr formi"
-        return render_template("index.html",x=x,valmynd=valmynd )
+        return render_template("index.html",x=x,valmynd=valmynd,flokkur=flokkar)
 
 
 @app.route('/utskra')
 def utskra():
     if session:
         session.pop("notandi", None)
-    return render_template("index.html",valmynd=valmynd )
+    return render_template("index.html",valmynd=valmynd,flokkur=flokkar)
 
 if __name__ == "__main__":
     app.run(debug=True)
