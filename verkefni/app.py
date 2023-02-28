@@ -20,9 +20,9 @@ valmynd = [ {"url":'/',"hlekkur":"Heim"},
             {"url":'/utskra',"hlekkur":"útskra"},
           ]
 
-flokkar = [ {"url":"/","hlekkur":"Handbolti"},
-            {"url":"/","hlekkur":"Fotbolti"},
-            {"url":"/","hlekkur":"Korfubolti"},]
+flokkar = [ {"url":"/flokkur/handbolti","hlekkur":"Handbolti"},
+            {"url":"/flokkur/fotbolti","hlekkur":"Fotbolti"},
+            {"url":"/flokkur/korfubolti","hlekkur":"Korfubolti"},]
 
 
 
@@ -41,6 +41,20 @@ db = fb.database()
 auth = fb.auth()
 
 
+#db.child("flokkar").push([('fotbolti', 'fotbolti'), ('handbolti', 'handbolti'), ('korfubolti', 'korfubolti')])
+#db.child("flokkar").push({"id":"fotbolti","nafn":"Fótbolti"})
+
+# Retrieve the data from Firebase as a dictionary
+flokkarindex = db.child("flokkar").get().val()
+
+# Convert the dictionary to a list of tuples
+flokkar_choices = [(v['id'], v['nafn']) for k, v in flokkarindex.items()]
+
+
+class flokkarfrm(FlaskForm):
+    tageitt = StringField("id",validators=[InputRequired()])
+    tageitt = StringField("nafn",validators=[InputRequired()])
+
 class Frm(FlaskForm):
     email = EmailField("Póstur:", validators=[InputRequired()])
     password = PasswordField("lykilord", validators=[InputRequired()])
@@ -48,7 +62,7 @@ class Frm(FlaskForm):
 
 class Dataform(FlaskForm):
     nafn = StringField("nafn:",validators=[InputRequired()])
-    flokkur = SelectField('Hvaða bolti', choices=[('Fotbolti', 'Fotbolti'), ('Handbolti', 'Handbolti'), ('Korfubolti', 'Korfubolti')])
+    flokkur = SelectField('Hvaða bolti', choices=flokkar_choices)
     texti = TextAreaField("Texti:", validators=[InputRequired(),Length(min=5,max=15)])  # Birtum CKEditorinn í þessum í index.html
     mynd = StringField("url",validators=[InputRequired()])
     published_date = DateField("dagsetning")
@@ -67,11 +81,19 @@ def index():
     else:
         return render_template("index.html",valmynd=valmynd,sg=False, gd = getdata,flokkur=flokkar)
 
+@app.route('/flokkur/<nafn>')
+def flokkur(nafn):
+
+    users = db.child("Gogn").get()
+    getdata = dict(users.val())
+
+    return render_template("flokkur.html",f=nafn, gd=getdata,valmynd=valmynd, flokkur=flokkar)
+
 @app.route('/dataform')
 def df():
     # Tilvikið f af Frm klasanum ( sem er form ) sendur yfir í template
     return render_template("nyskra.html", df=Dataform(), valmynd=valmynd,flokkur=flokkar)
-
+    
 @app.route('/nyskra', methods=["GET","POST"])
 def ns():
     df = Dataform()
@@ -80,10 +102,11 @@ def ns():
         nafn = df.nafn.data
         mynd = df.mynd.data
         texti = df.texti.data
-        published_date = str(datetime.today())
+        published_date = datetime.today()  
+        d = published_date.strftime("%#d.%#m.%#y")
 
         try:
-            db.child("Gogn").push({"flokkur":flokkur,"nafn":nafn,"texti":texti,"mynd":mynd,"published_date":published_date})
+            db.child("Gogn").push({"flokkur":flokkur,"nafn":nafn,"texti":texti,"mynd":mynd,"published_date":d})
             return render_template("index.html",valmynd=valmynd,flokkur=flokkar)
         except:
             return render_template("index.html",valmynd=valmynd,flokkur=flokkar)
@@ -129,6 +152,10 @@ def utskra():
     if session:
         session.pop("notandi", None)
     return render_template("index.html",valmynd=valmynd,flokkur=flokkar)
+
+@app.errorhandler(404)
+def villur(error):
+    return render_template("index.html",valmynd=valmynd,flokkur=flokkar )
 
 if __name__ == "__main__":
     app.run(debug=True)
